@@ -50,6 +50,7 @@ node {
                         docker.image("$IMAGE:$VERSION").push("$VERSION")
                     }
                     sh("sed -i 's|{{VERSION}}|$VERSION|' taskdef.json")
+                    
                     def TASKARN = sh(returnStdout: true,script:'/usr/local/bin/aws ecs register-task-definition --cli-input-json file://taskdef.json --region us-east-1 | jq -r .taskDefinition.taskDefinitionArn')
                     sh """
                         /usr/local/bin/aws ecs update-service --cluster ECS-CLUSTER-2 --service nginx-service  --region us-east-1 --task-definition $TASKARN
