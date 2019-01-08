@@ -5,27 +5,27 @@
 		"NginxTask": {
 			"Type": "AWS::ECS::TaskDefinition",
 			"Properties": {
-				"Family": "nginx-task-ecs-demo-app",
-				"Cpu": 128,
-				"Memory": 100,
-				"NetworkMode": "bridge",
-				"RequiresCompatibilities": [
+				"family": "nginx-task-ecs-demo-app",
+				"cpu": 128,
+				"memory": 100,
+				"networkMode": "bridge",
+				"requiresCompatibilities": [
 					"EC2"
 				],
-				"ExecutionRoleArn": "arn:aws:iam::308106623039:role/roles-ECSTaskExecutionRole-7FQ93OBB71SW",
-				"TaskRoleArn": "arn:aws:iam::308106623039:role/roles-ECSTaskExecutionRole-7FQ93OBB71SW",
-				"ContainerDefinitions": [
+				"executionRoleArn": "arn:aws:iam::308106623039:role/roles-ECSTaskExecutionRole-7FQ93OBB71SW",
+				"taskRoleArn": "arn:aws:iam::308106623039:role/roles-ECSTaskExecutionRole-7FQ93OBB71SW",
+				"containerDefinitions": [
 					{
-						"Name": "nginx-server",
-						"Image": "308106623039.dkr.ecr.us-east-1.amazonaws.com/nginx-ecs:{{VERSION}}",
-						"Cpu": 10,
-						"Memory": 50,
-						"Essential": true,
-						"PortMappings": [
+						"name": "nginx-server",
+						"image": "308106623039.dkr.ecr.us-east-1.amazonaws.com/nginx-ecs:{{VERSION}}",
+						"cpu": 10,
+						"memory": 50,
+						"essential": true,
+						"portMappings": [
 							{
-								"ContainerPort": 80,
-								"HostPort": 0,
-								"Protocol": "tcp"
+								"containerPort": 80,
+								"hostPort": 0,
+								"protocol": "tcp"
 							}
 						]
 					}
