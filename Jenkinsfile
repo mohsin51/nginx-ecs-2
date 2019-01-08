@@ -51,7 +51,7 @@ node {
                     }
                     sh """
                         /usr/local/bin/aws cloudformation update-stack --stack-name task --use-previous-template --parameters ParameterKey=VERSION,ParameterValue=$VERSION
-                        /usr/local/bin/aws ecs update-service --force-new-deployment --service serivce-Service-1RFVUQ1RNF4EL
+                        /usr/local/bin/aws ecs update-service --cluster ECS-CLUSTER-2 --service nginx-service --task-definition nginx-task-ecs-demo-app:2
                     """
                     
                 } catch(exc) {
