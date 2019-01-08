@@ -1,7 +1,7 @@
 {
     "family": "nginx-task-ecs-demo-app",
-    "cpu": 128,
-    "memory": 100,
+    "cpu": "128",
+    "memory": "100",
     "networkMode": "bridge",
     "requiresCompatibilities": [
         "EC2"
@@ -12,8 +12,8 @@
         {
             "name": "nginx-server",
             "image": "308106623039.dkr.ecr.us-east-1.amazonaws.com/nginx-ecs:{{VERSION}}",
-            "cpu": 10,
-            "memory": 50,
+            "cpu": "10",
+            "memory": "50",
             "essential": true,
             "portMappings": [
                 {
