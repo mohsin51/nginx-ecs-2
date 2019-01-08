@@ -1,0 +1,36 @@
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+	"Description": "creates Task Definition",
+	"Resources": {
+		"NginxTask": {
+			"Type": "AWS::ECS::TaskDefinition",
+			"Properties": {
+				"Family": "nginx-task-ecs-demo-app",
+				"Cpu": 128,
+				"Memory": 100,
+				"NetworkMode": "bridge",
+				"RequiresCompatibilities": [
+					"EC2"
+				],
+				"ExecutionRoleArn": "arn:aws:iam::308106623039:role/roles-ECSTaskExecutionRole-7FQ93OBB71SW",
+				"TaskRoleArn": "arn:aws:iam::308106623039:role/roles-ECSTaskExecutionRole-7FQ93OBB71SW",
+				"ContainerDefinitions": [
+					{
+						"Name": "nginx-server",
+						"Image": "308106623039.dkr.ecr.us-east-1.amazonaws.com/nginx-ecs:{{VERSION}}",
+						"Cpu": 10,
+						"Memory": 50,
+						"Essential": true,
+						"PortMappings": [
+							{
+								"ContainerPort": 80,
+								"HostPort": 0,
+								"Protocol": "tcp"
+							}
+						]
+					}
+				]
+			}
+		}
+	}
+}

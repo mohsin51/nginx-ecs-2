@@ -50,8 +50,9 @@ node {
                         docker.image("$IMAGE:$VERSION").push("$VERSION")
                     }
                     sh """
-                        /usr/local/bin/aws cloudformation create-stack --template-body file://$PWD/create-task-definition.yml --stack-name 'task$VERSION'
-                        /usr/local/bin/aws ecs update-service --cluster ECS-CLUSTER-2 --service nginx-service --task-definition nginx-task-ecs-demo-app:4
+                        sed -i 's|{{VERSION}}|$VERSION|' taskdef.json
+                        TASKARN = /usr/local/bin/aws ecs register-task-definition --cli-input-json file://taskdef.json --region us-east-1 | jq -r .taskDefinition.taskDefinitionArn
+                        /usr/local/bin/aws ecs update-service --cluster ECS-CLUSTER-2 --service nginx-service  --region us-east-1 --task-definition $TASKARN
                     """
                     
                 } catch(exc) {
@@ -61,3 +62,8 @@ node {
         }        
     } 
 }
+
+
+// /usr/local/bin/aws cloudformation update-stack --stack-name task --use-previous-template --parameters ParameterKey=VERSION,ParameterValue=$VERSION
+//  /usr/local/bin/aws cloudformation create-stack --template-body file://$PWD/create-task-definition.yml --stack-name 'task$VERSION  | jq -r .taskDefinition.taskDefinitionArn'
+// /usr/local/bin/aws ecs update-service --cluster ECS-CLUSTER-2 --service nginx-service --task-definition nginx-task-ecs-demo-app:4
