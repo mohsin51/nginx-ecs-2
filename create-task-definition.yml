@@ -1,0 +1,44 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: creates Task Definition
+
+Parameters: 
+  VERSION: 
+    Description: VERSION
+    Default: 'v1'
+    Type: String
+
+Resources:
+ NginxTask:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      # The name of a family that this task definition is registered to.  A family groups multiple versions of a task definition
+      Family: !Join ['', [!Ref 'AWS::StackName', '-ecs-demo-app']]
+      Cpu: 128
+      Memory: 100
+      # [none, bridge, awsvpc, and host]
+      NetworkMode: bridge
+      RequiresCompatibilities:
+        - EC2
+      # When you register a task definition, you can provide a task execution role that allows the containers in the task to pull container images and publish container logs to CloudWatch on your behalf 
+      ExecutionRoleArn: !ImportValue ECSTaskExecutionRole
+      TaskRoleArn: !ImportValue ECSTaskExecutionRole
+      ContainerDefinitions:
+      - Name: nginx-server
+        Image: !Join ["", [!Ref "AWS::AccountId", ".dkr.ecr.", !Ref "AWS::Region", ".amazonaws.com/", "nginx-ecs:", !Ref 'VERSION']]
+        Cpu: 10
+        Memory: 50
+        Essential: true
+        PortMappings:
+        - ContainerPort: 80
+          HostPort: 0
+          Protocol: tcp
+
+
+
+Outputs:
+  Task:
+    Description: 'ECS Task Definition'
+    Value: !Ref NginxTask
+    Export:
+      Name: 'NginxTask'  
+

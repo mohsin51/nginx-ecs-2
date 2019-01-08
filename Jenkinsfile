@@ -50,8 +50,8 @@ node {
                         docker.image("$IMAGE:$VERSION").push("$VERSION")
                     }
                     sh """
-                        /usr/local/bin/aws cloudformation update-stack --stack-name task --use-previous-template --parameters ParameterKey=VERSION,ParameterValue=$VERSION
-                        /usr/local/bin/aws ecs update-service --cluster ECS-CLUSTER-2 --service nginx-service --task-definition nginx-task-ecs-demo-app:2
+                        /usr/local/bin/aws cloudformation create-stack --template-body file://$PWD/create-task-definition.yml --stack-name 'task$VERSION'
+                        /usr/local/bin/aws ecs update-service --cluster ECS-CLUSTER-2 --service nginx-service --task-definition nginx-task-ecs-demo-app:4
                     """
                     
                 } catch(exc) {
