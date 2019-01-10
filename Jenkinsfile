@@ -17,8 +17,12 @@ node {
             git 'https://github.com/mohsin51/nginx-ecs-2'
         }
         stage('test'){
-            def TASK_EXEC_ARN = sh(returnStdout: true,script:"/usr/local/bin/aws iam get-role --role-name ECSTaskExecutionRole | jq '.Role.Arn' -r")
-            sh("sed -i 's|{{ROLE}}|$TASK_EXEC_ARN|g' taskdef.json")
+            script{
+                def TASK_EXEC_ARN = sh(returnStdout: true,script:"/usr/local/bin/aws iam get-role --role-name ECSTaskExecutionRole | jq '.Role.Arn' -r")
+                sh """
+                    sed -i 's|{{ROLE}}|$TASK_EXEC_ARN|g' taskdef.json
+                """
+            }
 
         }
         // stage('build docker images'){
