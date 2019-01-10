@@ -20,7 +20,7 @@ node {
             script{
                 def TASK_EXEC_ARN = sh(returnStdout: true,script:"/usr/local/bin/aws iam get-role --role-name ECSTaskExecutionRole | jq '.Role.Arn' -r")
                 sh """
-                    sed -i 's|{{ROLE}}|$TASK_EXEC_ARN|g' taskdef.json
+                    sed -i "s|{{ROLE}}|$TASK_EXEC_ARN|g" taskdef.json
                 """
             }
 
