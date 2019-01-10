@@ -11,7 +11,7 @@ app.use(cors())
 
 
 app.get('/', (req, res) => {
-    res.send('Hello from node :v1')
+    res.send('Hello from node :v2')
 });
 
 const port = 3000
