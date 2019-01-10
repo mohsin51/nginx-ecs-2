@@ -57,10 +57,10 @@ node {
                     sh("sed -i 's|{{VERSION}}|$VERSION|g' taskdef.json")
 
                     def TASKARN = sh(returnStdout: true,script:"/usr/local/bin/aws ecs register-task-definition --cli-input-json file://taskdef.json --region $REGION | jq -r .taskDefinition.taskDefinitionArn")
-                    def SERVICE = sh(returnStdout:true,script:"/usr/local/bin/aws ecs describe-services --services $SERVICE --cluster $CLUSTER --region $REGION | jq .failures[]")
+                    def RUNNING_SERVICE = sh(returnStdout:true,script:"/usr/local/bin/aws ecs describe-services --services $SERVICE --cluster $CLUSTER --region $REGION | jq .failures[]")
 
                     
-                    sh("echo $SERVICE")
+                    sh("echo $RUNNING_SERVICE")
                     sh """
                         /usr/local/bin/aws ecs update-service --cluster $CLUSTER --service $SERVICE  --region $REGION --task-definition $TASKARN
                     """
