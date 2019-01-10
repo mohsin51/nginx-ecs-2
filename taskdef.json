@@ -6,8 +6,8 @@
     "requiresCompatibilities": [
         "EC2"
     ],
-    "executionRoleArn": "{{ROLE}}",
-    "taskRoleArn": "{{ROLE}}",
+    "executionRoleArn": "arn:aws:iam::308106623039:role/roles-ECSTaskExecutionRole-BWOL5QTUJX7S",
+    "taskRoleArn": "arn:aws:iam::308106623039:role/roles-ECSTaskExecutionRole-BWOL5QTUJX7S",
     "containerDefinitions": [
         {
             "name": "nginx-server",
