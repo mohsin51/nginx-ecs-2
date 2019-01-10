@@ -15,6 +15,7 @@
             "cpu": 10,
             "memory": 50,
             "essential": true,
+            "links" : [ "backend" ],
             "portMappings": [
                 {
                     "containerPort": 80,
@@ -22,6 +23,14 @@
                     "protocol": "tcp"
                 }
             ]
+        },
+        {
+            "name": "backend",
+            "image": "308106623039.dkr.ecr.us-east-1.amazonaws.com/backend-ecs:{{VERSION}}",
+            "cpu": 10,
+            "memory": 50,
+            "essential": true
         }
+
     ]
 }

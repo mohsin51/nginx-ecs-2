@@ -3,6 +3,18 @@ version: "3"
 services:
   nginx:
     image: nginx-ecs:${IMGTAG:-latest}
-    build: .
+    build: 
+      context: ./Nginx
+      dockerfile: Dockerfile
     ports:
       - 8083:80
+    depends_on: 
+      - backend  
+
+  backend:
+    image: backend-ecs:${IMGTAG:-latest}
+    build: 
+      context: ./Node
+      dockerfile: Dockerfile
+    volumes:
+      - ./Node:/server

@@ -4,11 +4,11 @@ Description: creates Task Definition
 Parameters: 
   VERSION: 
     Description: VERSION
-    Default: 'v1'
+    Default: 'latest'
     Type: String
 
 Resources:
- NginxTask:
+  NginxTask:
     Type: AWS::ECS::TaskDefinition
     Properties:
       # The name of a family that this task definition is registered to.  A family groups multiple versions of a task definition
@@ -28,10 +28,35 @@ Resources:
         Cpu: 10
         Memory: 50
         Essential: true
+        Links:
+        - "backend"
+        LogConfiguration:
+          LogDriver: awslogs
+          Options:
+            awslogs-group: !Ref 'CloudwatchLogsGroup'
+            awslogs-region: !Ref 'AWS::Region'
+            awslogs-stream-prefix: ecs-demo-app
         PortMappings:
         - ContainerPort: 80
           HostPort: 0
           Protocol: tcp
+      - Name: backend
+        Image: !Join ["", [!Ref "AWS::AccountId", ".dkr.ecr.", !Ref "AWS::Region", ".amazonaws.com/", "backend-ecs:", !Ref 'VERSION']]
+        Cpu: 10
+        Memory: 50
+        Essential: true
+        LogConfiguration:
+          LogDriver: awslogs
+          Options:
+            awslogs-group: !Ref 'CloudwatchLogsGroup'
+            awslogs-region: !Ref 'AWS::Region'
+            awslogs-stream-prefix: ecs-demo-app
+  
+  CloudwatchLogsGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Join ['-', [ECSLogGroup, !Ref 'AWS::StackName']]
+      RetentionInDays: 5               
 
 
 

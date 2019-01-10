@@ -4,10 +4,11 @@
 node {
     withEnv(['VERSION=latest',
              'PROJECT=nginx-ecs',
-             'IMAGE=nginx-ecs',
+             'NGINX_IMAGE=nginx-ecs',
+             'NODE_IMAGE=backend-ecs',
              'ECRURL=http://308106623039.dkr.ecr.us-east-1.amazonaws.com',
              'ECRCRED=ecr:us-east-1:AWS_CRED',
-             'CLUSTER=ECS-CLUSTER-2',
+             'CLUSTER=ECS-CLUSTER',
              'SERVICE=nginx-service',
              'REGION=us-east-1'
              ]) {
@@ -50,11 +51,16 @@ node {
 
                     docker.withRegistry("$ECRURL", "$ECRCRED")   
                     {
-                        docker.image("$IMAGE:$VERSION").push("$VERSION")
+                        docker.image("$NGINX_IMAGE:$VERSION").push("$VERSION")
+                        docker.image("$NODE_IMAGE:$VERSION").push("$VERSION")
                     }
-                    sh("sed -i 's|{{VERSION}}|$VERSION|' taskdef.json")
+                    sh("sed -i 's|{{VERSION}}|$VERSION|g' taskdef.json")
 
                     def TASKARN = sh(returnStdout: true,script:"/usr/local/bin/aws ecs register-task-definition --cli-input-json file://taskdef.json --region $REGION | jq -r .taskDefinition.taskDefinitionArn")
+                    def SERVICE = sh(returnStdout:true,script:"/usr/local/bin/aws ecs describe-services --services $SERVICE --cluster $CLUSTER --region $REGION | jq .failures[]")
+
+                    
+                    sh("echo $SERVICE")
                     sh """
                         /usr/local/bin/aws ecs update-service --cluster $CLUSTER --service $SERVICE  --region $REGION --task-definition $TASKARN
                     """
